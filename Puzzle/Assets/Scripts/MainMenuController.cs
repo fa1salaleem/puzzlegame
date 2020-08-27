@@ -2,15 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using UnityEngine.UI.Image;
 
 public class MainMenuController : MonoBehaviour
 {
 	public GameObject Library,InProgess,Categories,MyCollection,GamePlaySetting,SettingsPanel,DailyPuzzle;
 
+	public Image GamePlayImage; 
+	public Image[] Sources;
+//	public Image ImgSprite = null;
+
+	[SerializeField] private UnityEngine.UI.Image image = null;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+//		image.sprite = Resources.Load<Sprite>("Images/test");
+//		ImgSprite.sprite = Resources.Load<Sprite>("Library/image.png");
     }
 
     // Update is called once per frame
