@@ -6,25 +6,54 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-	public GameObject Library,InProgess,Categories,MyCollection,GamePlaySetting,SettingsPanel,DailyPuzzle,GamePlay,DeletePanel;
+	public GameObject Library,InProgess,Categories,MyCollection,GamePlaySetting,SettingsPanel,DailyPuzzle,GamePlay,DeletePanel,CollectionShop;
 
-	public Image GamePlayImage; 
-//	public Image[] Sources;
-//	public Image ImgSprite;
-
-//	[SerializeField] private UnityEngine.UI.Image image = null;
+	public Image GamePlayImage;
+	public GameObject IndividualPuzzleScreen;
+	public GameObject[] CatPuzzleScreen;
+	public string[] Name;
+	public GameObject CategoryName, SelectedRotation;
+	public Transform Pos1,Pos2;
 
     // Start is called before the first frame update
-    void Start()
-    {
-//		GamePlayImage.sprite = Resources.Load<Sprite>("Images/House");
-    }
+//    void Start()
+//    {
+
+//    }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+//    void Update()
+//    {
+
+//    }
+
+	public void CollectionShopFunction(){
+		CollectionShop.SetActive (true);
+		MyCollection.SetActive (false);
+	}
+
+	public void Rotation(int j){
+		if (j == 1) {
+			SelectedRotation.transform.position = Pos1.transform.position;
+		}
+		else if (j == 2) {
+			SelectedRotation.transform.position = Pos2.transform.position;
+		}
+	}
+
+	public void BackToCategory(){
+		for (int i = 0; i < CatPuzzleScreen.Length; i++) {
+			CatPuzzleScreen [i].SetActive (false);
+		}
+		IndividualPuzzleScreen.SetActive(false);
+		Categories.SetActive(true);
+	}
+	
+	public void CategoryClick(int i){
+		CategoryName.GetComponent<Text>().text = Name[i];
+		CatPuzzleScreen [i].SetActive (true);
+		IndividualPuzzleScreen.SetActive(true);Categories.SetActive(false);
+	}
 
 	public void GamePlayButton(int i){
 		if(i == 0)
@@ -134,6 +163,10 @@ public class MainMenuController : MonoBehaviour
 		}
 		else if (GamePlay.activeSelf) {
 			LibraryFunction ();
+		}
+		else if(CollectionShop.activeSelf){
+			CollectionShop.SetActive (false);
+			MyCollection.SetActive (true);
 		}
 	}
 
