@@ -18,30 +18,37 @@ public class MainMenuController : MonoBehaviour
 	public GameObject libraryContentScroll;
 	public JsonFile myJsonFile;
 
-    private void Start()
-    {
-		myJsonFile.LoadJson();
+	public float Geihftl;
 
-		for (int i = 0; i < 12; i++)
-		{
-			int imageCounter = 0;
-			foreach (Hashtable hashLibraryImage in myJsonFile.allLibraryImages)
-			{
-				string imagePath = (string)hashLibraryImage["imagePath"];
-				string imageName = (string)hashLibraryImage["imageName"];
-
-				PuzzleImageButton.LoadImage(imagePath, imageName, this, libraryContentScroll.transform);
-				//for scroll content
-				if (imageCounter % 2 == 0)
-				{
-					RectTransform rectTransform = libraryContentScroll.GetComponent<RectTransform>();
-					rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, rectTransform.anchorMin.y - 0.345f);
-				}
-				imageCounter++;
-			}
-		}
-
-	}
+//	private void Start()
+//	{
+//		myJsonFile.LoadJson();
+//
+//		for (int i = 0; i < 12; i++)
+//		{
+//			int imageCounter = 0;
+//			foreach (Hashtable hashLibraryImage in myJsonFile.allLibraryImages)
+//			{
+//				string imagePath = (string)hashLibraryImage["imagePath"];
+//				string imageName = (string)hashLibraryImage["imageName"];
+//				float value = 0.34f;
+//				if (Screen.height < 2960)
+//				{
+//					float percentDecrease = (((2960f - Screen.height) / 2960f) * 100f);
+//					float percentIncrease = (17.6f / 35.1f) * percentDecrease;
+//					value = value + (value * percentIncrease / 100f);
+//				}
+//				PuzzleImageButton.LoadImage(imagePath, imageName, this, libraryContentScroll.transform);
+//				//for scroll content
+//				if (imageCounter % 2 == 0)
+//				{
+//					RectTransform rectTransform = libraryContentScroll.GetComponent<RectTransform>();
+//					rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, rectTransform.anchorMin.y - value);
+//				}
+//				imageCounter++;
+//			}
+//		}
+//	}
 
     public void CollectionShopFunction(){
 		CollectionShop.SetActive (true);

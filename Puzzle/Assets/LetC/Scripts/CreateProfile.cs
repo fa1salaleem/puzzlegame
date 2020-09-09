@@ -99,14 +99,14 @@ public class CreateProfile : MonoBehaviour {
 
 			if(side == "right") {
 				if(i == pageCount-1) {
-					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1.15f,1.15f,1.15f),Time.deltaTime*5);
+					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1.1f,1.1f,1.1f),Time.deltaTime*5);
 					introImages [i].transform.SetAsLastSibling ();
 				} else {
 					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1f,1f,1f),Time.deltaTime*5);
 				}
 			} else {
 				if(i == pageCount) {
-					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1.15f,1.15f,1.15f),Time.deltaTime*5);
+					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1.1f,1.1f,1.1f),Time.deltaTime*5);
 					introImages [i].transform.SetAsLastSibling ();
 				} else {
 					introImages[i].localScale = Vector3.Lerp(introImages[i].localScale,new Vector3(1f,1f,1f),Time.deltaTime*5);
