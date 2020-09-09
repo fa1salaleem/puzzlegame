@@ -1,0 +1,27 @@
+{
+  "allImagesData": {
+    "library": {
+      "images": [
+        {
+          "imagePath": "Library/Image1",
+          "imageName": "xyz"
+        },
+        {
+          "imagePath": "Library/Image2",
+          "imageName": "xyz"
+        }
+      ],
+      "bestImage": "AwesomeImages/LibraryBest"
+    },
+    "animals": {
+      "images": [
+        {
+          "imagePath": "Animals/Image1"
+        },
+        {
+          "imagePath": "Animals/Image2"
+        }
+      ]
+    }
+  }
+}

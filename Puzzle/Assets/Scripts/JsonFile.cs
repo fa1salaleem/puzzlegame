@@ -5,29 +5,24 @@ using System.IO;
 
 public class JsonFile : MonoBehaviour
 {
-	public string jsonData;
-    // Start is called before the first frame update
-    void Start()
+	Hashtable baseData;
+
+    private void Start()
     {
-//		Hashtable sampleData = (Hashtable)easy.JSON.JsonDecode(jsonData);
+		LoadJson();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-	public void LoadJson()
+    public void LoadJson()
 	{
 		string nameOfJson = "testmateen.json";
 		string path = Application.streamingAssetsPath + "/" + nameOfJson;
+		string jsonData = "";
 		using (StreamReader r = new StreamReader(path))
 		{
 			jsonData = r.ReadToEnd();
 		}
-		Hashtable sampleData = (Hashtable)easy.JSON.JsonDecode(jsonData);
-		Hashtable allImagesData = (Hashtable)sampleData["allImagesData"];
+		baseData = (Hashtable)easy.JSON.JsonDecode(jsonData);
+		Hashtable allImagesData = (Hashtable)baseData["allImagesData"];
 		Hashtable library = (Hashtable)allImagesData["library"];
 		Hashtable animals = (Hashtable)allImagesData["animals"];
 
@@ -44,7 +39,6 @@ public class JsonFile : MonoBehaviour
 		{
 			string imagePath = (string)hashanimalImage["imagePath"];
 			Debug.Log(imagePath);
-		}
+		}	
 	}
-
 }
