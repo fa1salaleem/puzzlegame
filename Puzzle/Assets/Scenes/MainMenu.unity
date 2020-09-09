@@ -5252,7 +5252,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 425, y: 284}
-  m_Spacing: {x: -75, y: -25}
+  m_Spacing: {x: -50, y: -25}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &160953310
@@ -10490,7 +10490,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &350112619
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20199,7 +20199,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: -17}
+  m_SizeDelta: {x: -0.00012207, y: -17}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &666283841
 MonoBehaviour:
@@ -30069,15 +30069,51 @@ MonoBehaviour:
   DailyPuzzle: {fileID: 9919069}
   GamePlay: {fileID: 575050975}
   DeletePanel: {fileID: 895976597}
-  CollectionShop: {fileID: 0}
+  CollectionShop: {fileID: 1551977973}
   GamePlayImage: {fileID: 65484584}
-  IndividualPuzzleScreen: {fileID: 0}
-  CatPuzzleScreen: []
-  Name: []
-  CategoryName: {fileID: 0}
-  SelectedRotation: {fileID: 0}
-  Pos1: {fileID: 0}
-  Pos2: {fileID: 0}
+  IndividualPuzzleScreen: {fileID: 2001084861}
+  CatPuzzleScreen:
+  - {fileID: 1387401473}
+  - {fileID: 1066496661}
+  - {fileID: 1171758558}
+  - {fileID: 1245082187}
+  - {fileID: 1667005257}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  - {fileID: 350112618}
+  Name:
+  - Animals
+  - Foods
+  - Flowers
+  - Art
+  - Drawing
+  - Nature
+  - Colors
+  - Objects
+  - Hard Puzzles
+  - Home
+  - Transport
+  - Birds
+  - Animals
+  - Foods
+  - Flowers
+  - Art
+  - Drawing
+  - Nature
+  CategoryName: {fileID: 1782747387}
+  SelectedRotation: {fileID: 1553926192}
+  Pos1: {fileID: 859385642}
+  Pos2: {fileID: 2108734603}
   libraryContentScroll: {fileID: 154881773}
   myJsonFile: {fileID: 1016596902}
 --- !u!4 &1016596901
@@ -31564,7 +31600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1066496662
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35730,7 +35766,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1171758559
 RectTransform:
   m_ObjectHideFlags: 0
@@ -37207,7 +37243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1245082188
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40569,7 +40605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1387401474
 RectTransform:
   m_ObjectHideFlags: 0
@@ -47773,7 +47809,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1667005258
 RectTransform:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class MainMenuController : MonoBehaviour
     {
 		myJsonFile.LoadJson();
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			int imageCounter = 0;
 			foreach (Hashtable hashLibraryImage in myJsonFile.allLibraryImages)
@@ -35,7 +35,7 @@ public class MainMenuController : MonoBehaviour
 				if (imageCounter % 2 == 0)
 				{
 					RectTransform rectTransform = libraryContentScroll.GetComponent<RectTransform>();
-					rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, rectTransform.anchorMin.y - 0.41f);
+					rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, rectTransform.anchorMin.y - 0.345f);
 				}
 				imageCounter++;
 			}
