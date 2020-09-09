@@ -15,19 +15,35 @@ public class MainMenuController : MonoBehaviour
 	public GameObject CategoryName, SelectedRotation;
 	public Transform Pos1,Pos2;
 
-    // Start is called before the first frame update
-//    void Start()
-//    {
+	public GameObject libraryContentScroll;
+	public JsonFile myJsonFile;
 
-//    }
+    private void Start()
+    {
+		myJsonFile.LoadJson();
 
-    // Update is called once per frame
-//    void Update()
-//    {
+		for (int i = 0; i < 10; i++)
+		{
+			int imageCounter = 0;
+			foreach (Hashtable hashLibraryImage in myJsonFile.allLibraryImages)
+			{
+				string imagePath = (string)hashLibraryImage["imagePath"];
+				string imageName = (string)hashLibraryImage["imageName"];
 
-//    }
+				PuzzleImageButton.LoadImage(imagePath, imageName, this, libraryContentScroll.transform);
+				//for scroll content
+				if (imageCounter % 2 == 0)
+				{
+					RectTransform rectTransform = libraryContentScroll.GetComponent<RectTransform>();
+					rectTransform.anchorMin = new Vector2(rectTransform.anchorMin.x, rectTransform.anchorMin.y - 0.41f);
+				}
+				imageCounter++;
+			}
+		}
 
-	public void CollectionShopFunction(){
+	}
+
+    public void CollectionShopFunction(){
 		CollectionShop.SetActive (true);
 		MyCollection.SetActive (false);
 	}

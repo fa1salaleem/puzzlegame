@@ -3,12 +3,12 @@
     "library": {
       "images": [
         {
-          "imagePath": "Library/Image1",
-          "imageName": "xyz"
+          "imagePath": "AllPuzzles/AnimalsTemp",
+          "imageName": "africa-21787_1920"
         },
         {
-          "imagePath": "Library/Image2",
-          "imageName": "xyz"
+          "imagePath": "AllPuzzles/AnimalsTemp",
+          "imageName": "animal-339400_1920"
         }
       ],
       "bestImage": "AwesomeImages/LibraryBest"

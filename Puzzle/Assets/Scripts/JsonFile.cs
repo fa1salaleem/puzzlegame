@@ -5,12 +5,8 @@ using System.IO;
 
 public class JsonFile : MonoBehaviour
 {
-	Hashtable baseData;
-
-    private void Start()
-    {
-		LoadJson();
-    }
+	public Hashtable baseData;
+	public ArrayList allLibraryImages;
 
     public void LoadJson()
 	{
@@ -26,10 +22,10 @@ public class JsonFile : MonoBehaviour
 		Hashtable library = (Hashtable)allImagesData["library"];
 		Hashtable animals = (Hashtable)allImagesData["animals"];
 
-		ArrayList libraryImages = library["images"] as ArrayList;
+		allLibraryImages = library["images"] as ArrayList;
 		ArrayList animalsImages = animals["images"] as ArrayList;
 
-		foreach(Hashtable hashLibraryImage in libraryImages)
+		foreach(Hashtable hashLibraryImage in allLibraryImages)
 		{
 			string imagePath = (string)hashLibraryImage["imagePath"];
 			Debug.Log(imagePath);
@@ -41,4 +37,5 @@ public class JsonFile : MonoBehaviour
 			Debug.Log(imagePath);
 		}	
 	}
+
 }
