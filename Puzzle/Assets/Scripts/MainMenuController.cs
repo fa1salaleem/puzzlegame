@@ -12,7 +12,7 @@ public class MainMenuController : MonoBehaviour
 	public GameObject IndividualPuzzleScreen;
 	public GameObject[] CatPuzzleScreen;
 	public string[] Name;
-	public GameObject CategoryName, SelectedRotation;
+	public GameObject CategoryName, SelectedRotation,SelectedDifficulty;
 	public Transform Pos1,Pos2;
 
 	public GameObject libraryContentScroll;
@@ -20,8 +20,13 @@ public class MainMenuController : MonoBehaviour
 
 	public float Geihftl;
 
-//	private void Start()
-//	{
+	public static int PiecesNo;
+
+	private void Start()
+	{
+		PlayerPrefs.DeleteAll ();
+		PiecesNo = 16;
+		CheckRotation ();
 //		myJsonFile.LoadJson();
 //
 //		for (int i = 0; i < 12; i++)
@@ -48,19 +53,57 @@ public class MainMenuController : MonoBehaviour
 //				imageCounter++;
 //			}
 //		}
-//	}
+	}
+
+	void Update(){
+		print (PlayerPrefs.GetInt ("IsRotating", 0));
+			
+	}
 
     public void CollectionShopFunction(){
 		CollectionShop.SetActive (true);
 		MyCollection.SetActive (false);
 	}
 
+	public void DificultySelection(int i){
+		if (i == 1) {
+			SelectedDifficulty.transform.localPosition = new Vector3(-300.0f,-29.0f,0.0f);
+			PiecesNo = 16;
+		}
+		else if (i == 2) {
+			SelectedDifficulty.transform.localPosition = new Vector3(-150.0f,-29.0f,0.0f);
+			PiecesNo = 25;
+		}
+		else if (i == 3) {
+			SelectedDifficulty.transform.localPosition = new Vector3(0.0f,-29.0f,0.0f);
+			PiecesNo = 36;
+		}
+		else if (i == 4) {
+			SelectedDifficulty.transform.localPosition = new Vector3(150.0f,-29.0f,0.0f);
+			PiecesNo = 64;
+		}
+		else if (i == 5) {
+			SelectedDifficulty.transform.localPosition = new Vector3(300.0f,-29.0f,0.0f);
+			PiecesNo = 100;
+		}
+	}
+
+	void CheckRotation(){
+		if (PlayerPrefs.GetInt("IsRotating",0) == 0) {
+			SelectedRotation.transform.position = Pos2.transform.position;
+		} else {
+			SelectedRotation.transform.position = Pos1.transform.position;
+		}
+	}
+
 	public void Rotation(int j){
 		if (j == 1) {
 			SelectedRotation.transform.position = Pos1.transform.position;
+			PlayerPrefs.SetInt ("IsRotating", 1);
 		}
 		else if (j == 2) {
 			SelectedRotation.transform.position = Pos2.transform.position;
+			PlayerPrefs.SetInt ("IsRotating", 0);
 		}
 	}
 
