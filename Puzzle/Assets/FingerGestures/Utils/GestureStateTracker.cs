@@ -3,28 +3,28 @@ using System.Collections;
 
 public class GestureStateTracker : MonoBehaviour 
 {
-    public UnityEngine.XR.WSA.Input.GestureRecognizer gesture;
+    public GestureRecognizer gesture;
 
-	void Awake() 
+    void Awake()
     {
-        if( !gesture )
-            gesture = GetComponent<UnityEngine.XR.WSA.Input.GestureRecognizer>();
-	}
+        if (!gesture)
+            gesture = GetComponent<GestureRecognizer>();
+    }
 
     void OnEnable()
     {
-        if( gesture )
+        if (gesture)
             gesture.OnStateChanged += gesture_OnStateChanged;
     }
 
     void OnDisable()
     {
-        if( gesture )
+        if (gesture)
             gesture.OnStateChanged -= gesture_OnStateChanged;
     }
 
-    void gesture_OnStateChanged( UnityEngine.XR.WSA.Input.GestureRecognizer source )
+    void gesture_OnStateChanged(GestureRecognizer source)
     {
-        Debug.Log( "Gesture " + source + " changed from " + source.PreviousState + " to " + source.State );
+        Debug.Log("Gesture " + source + " changed from " + source.PreviousState + " to " + source.State);
     }
 }
