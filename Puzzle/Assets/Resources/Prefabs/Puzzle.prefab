@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169836421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -900}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2807038195513928829}
@@ -124,6 +124,7 @@ MonoBehaviour:
   puzzleImageSource: {fileID: 0}
   currTopZ: 0
   noOfPieces: 0
+  _camera: {fileID: 0}
   tapEnabled: 1
   touchEnabled: 1
 --- !u!1 &2807038195513928830
@@ -177,6 +178,7 @@ MonoBehaviour:
   puzzlePieces: 0
   puzzleSprite: {fileID: 0}
   image: {fileID: 0}
+  _camera: {fileID: 169836424}
 --- !u!1 &3656883749008633931
 GameObject:
   m_ObjectHideFlags: 0

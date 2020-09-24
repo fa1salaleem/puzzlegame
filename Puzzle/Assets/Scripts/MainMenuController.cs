@@ -214,6 +214,8 @@ public class MainMenuController : MonoBehaviour
 		GamePlaySetting.SetActive (false);
 		SettingsPanel.SetActive (false);
 		DailyPuzzle.SetActive (false);
+
+		PuzzleController.MakePuzzle();
 	}
 
 	public void Settings(){

@@ -15,7 +15,8 @@ public class TextureDivider : MonoBehaviour
     public Texture2D puzzleImageSource;
     public int currTopZ = 0;
     public int noOfPieces;
-    float pieceWidth, pieceHeight;    
+    float pieceWidth, pieceHeight;
+    public Camera _camera;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
     {
@@ -111,9 +112,9 @@ public class TextureDivider : MonoBehaviour
         SI_Helper.GetInstance.CalculateScreenWidthHeight();
 
         //starting X & Y space from left & above for first piece
-        float startXPositionOffset = 1.25f;
-        float startYPositionOffset = 2.1f;
-        float pixelToUnitRatio = 200.0f;
+        float startXPositionOffset = -2.0f;
+        float startYPositionOffset = 6.0f;
+        float pixelToUnitRatio = 100.0f;
 
         float spaceToCoverX = (SI_Helper.GetInstance.screenWidthInWorldPoints - startXPositionOffset);
         float textureSpaceX = textureWidth / pixelToUnitRatio;
@@ -154,6 +155,7 @@ public class TextureDivider : MonoBehaviour
             {
                 Sprite newSprite = Sprite.Create(source, new Rect(j * pieceWidth, i * pieceHeight, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
                 GameObject n = new GameObject();
+                n.layer = 8;//Gameplay
                 SpriteRenderer sr = n.AddComponent<SpriteRenderer>();
                 sr.sprite = newSprite;
                 sr.sortingOrder = 10;
@@ -201,7 +203,7 @@ public class TextureDivider : MonoBehaviour
         if (!tapEnabled) return;
         if (true)
         {
-            GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos);
+            GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
             if (touchedObj != null)
             {
                 tapEnabled = false;
@@ -219,7 +221,7 @@ public class TextureDivider : MonoBehaviour
     void FingerGestures_OnFingerDown(int fingerIndex, Vector2 fingerPos)
     {
         if (!touchEnabled) return;
-        GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos);
+        GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
         if (touchedObj != null)
         {
             originalPositionOfPickedObject = touchedObj.transform.position;
@@ -230,14 +232,14 @@ public class TextureDivider : MonoBehaviour
     }
 
     //for test temorary solution
-    float maxPositonY = 1.8f;
+    float maxPositonY = 8.5f;
 
     void HandleOnFingerMoveBegin(int fingerIndex, Vector2 fingerPos)
     {
         if (!touchEnabled) return;
         if (pickedObject != null)
         {
-            Vector3 position = SI_Helper.GetInstance.GetWorldPosition(fingerPos);              
+            Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);              
             if((position.y) > maxPositonY)
             {
                 pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
@@ -254,7 +256,7 @@ public class TextureDivider : MonoBehaviour
         if (!touchEnabled) return;
         if (pickedObject != null)
         {
-            Vector3 position = SI_Helper.GetInstance.GetWorldPosition(fingerPos);
+            Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
             if ((position.y) > maxPositonY)
             {
                 pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);

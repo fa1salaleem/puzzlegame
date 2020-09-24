@@ -9,27 +9,35 @@ public class PuzzleController : MonoBehaviour
     public int puzzlePieces;
     public Sprite puzzleSprite;
     public Image image;
+    public Camera _camera;
 
-    public static PuzzleController MakePuzzle(Hashtable data)
+    public static PuzzleController MakePuzzle()
     {
         GameObject gameObject = Instantiate(Resources.Load("Prefabs/Puzzle")) as GameObject;
         PuzzleController puzzle = gameObject.GetComponent<PuzzleController>();
-        puzzle.Initialize(data);
+        puzzle.Initialize();
         return puzzle;
     }
 
 
-    private void Initialize(Hashtable data)
-	{      
-        
-        puzzlePieces = 16;
-        string urlFile = "filepath";
+    private void Initialize()
+	{
+        textureDivider._camera = _camera;
+        puzzlePieces = 9;
+        string filePath = "Images/Eagle";
 
-        if(urlFile != null)
+        if(filePath != null)
         {
             //StartCoroutine(Download(urlFile));
+            LoadPuzzleImage(filePath);
         }
-	}
+    }
+
+    void LoadPuzzleImage(string filePath)
+    {
+        Sprite sp = Resources.Load<Sprite>(filePath);
+        textureDivider.DivideTexture(sp.texture, puzzlePieces, 1);
+    }
 
     IEnumerator Download(string imageUrl)
     {
