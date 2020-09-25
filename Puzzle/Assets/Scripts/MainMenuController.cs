@@ -18,6 +18,9 @@ public class MainMenuController : MonoBehaviour
 	public GameObject libraryContentScroll;
 	public JsonFile myJsonFile;
 
+	public PuzzleController puzzleController;
+	public string puzzleImageToPlayPath;
+
 	public float Geihftl;
 
 	public static int PiecesNo;
@@ -122,18 +125,19 @@ public class MainMenuController : MonoBehaviour
 	}
 
 	public void GamePlayButton(int i){
-		if(i == 0)
-			GamePlayImage.sprite = Resources.Load<Sprite>("Images/Deer");
+		if (i == 0)
+			puzzleImageToPlayPath = "Images/Deer";
 		else if(i == 1)
-			GamePlayImage.sprite = Resources.Load<Sprite>("Images/Eagle");
+			puzzleImageToPlayPath = "Images/Eagle";
 		else if(i == 2)
-			GamePlayImage.sprite = Resources.Load<Sprite>("Images/House");
+			puzzleImageToPlayPath = "Images/House";
 		else if(i == 3)
-			GamePlayImage.sprite = Resources.Load<Sprite>("Images/Owl");
+			puzzleImageToPlayPath = "Images/Owl";
 		else if(i == 4)
-			GamePlayImage.sprite = Resources.Load<Sprite>("Images/Rabit");
+			puzzleImageToPlayPath = "Images/Rabit";
 
-		GamePlayFunction ();
+		GamePlayImage.sprite = Resources.Load<Sprite>(puzzleImageToPlayPath);
+		GamePlayFunction();
 	}
 
 	public void DeletePanelFunction(){
@@ -215,8 +219,17 @@ public class MainMenuController : MonoBehaviour
 		SettingsPanel.SetActive (false);
 		DailyPuzzle.SetActive (false);
 
-		PuzzleController.MakePuzzle();
+		puzzleController = PuzzleController.MakePuzzle(PiecesNo, puzzleImageToPlayPath);
 	}
+
+	public void CleanUpPuzzle()
+    {
+		if(puzzleController != null)
+        {
+			Destroy(puzzleController.gameObject);
+			puzzleController = null;
+        }
+    }
 
 	public void Settings(){
 		SettingsPanel.SetActive (true);
@@ -230,7 +243,8 @@ public class MainMenuController : MonoBehaviour
 			LibraryFunction ();
 		}
 		else if (GamePlay.activeSelf) {
-			LibraryFunction ();
+			CleanUpPuzzle();
+			LibraryFunction();
 		}
 		else if(CollectionShop.activeSelf){
 			CollectionShop.SetActive (false);

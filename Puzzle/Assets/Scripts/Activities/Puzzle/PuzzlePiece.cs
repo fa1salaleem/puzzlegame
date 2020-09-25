@@ -165,7 +165,7 @@ public class PuzzlePiece : MonoBehaviour
 
                     if (!snapped && tooClose)
                     {
-                        gameObject.transform.position = textureDivider.originalPositionOfPickedObject;
+                        //gameObject.transform.position = textureDivider.originalPositionOfPickedObject;
                     }
                 }
                 else
@@ -173,7 +173,7 @@ public class PuzzlePiece : MonoBehaviour
                     Debug.Log("Nearest Object Collider is NULL");
                     if (tooClose)
                     {
-                        gameObject.transform.position = textureDivider.originalPositionOfPickedObject;
+                        //gameObject.transform.position = textureDivider.originalPositionOfPickedObject;
                     }
                 }
             }

@@ -29,81 +29,30 @@ public class TextureDivider : MonoBehaviour
         float textureWidth = source.width;
         float textureHeight = source.height;
 
-        if (textureWidth > textureHeight) //horizontal image
+        if (noOfPieces == 16)
         {
-            if(noOfPieces == 2)
-            {
-                rows = 1;
-                coloumns = 2;
-            }
-            else if(noOfPieces == 3)
-            {
-                rows = 1;
-                coloumns = 3;
-            }
-            else if (noOfPieces == 4)
-            {
-                rows = 2;
-                coloumns = 2;
-            }
-            else if (noOfPieces == 6)
-            {
-                rows = 2;
-                coloumns = 3;
-            }
-            else if (noOfPieces == 9)
-            {
-                rows = 3;
-                coloumns = 3;
-            }
-            else if (noOfPieces == 12)
-            {
-                rows = 3;
-                coloumns = 4;
-            }
-            else if (noOfPieces == 15)
-            {
-                rows = 3;
-                coloumns = 5;
-            }
+            rows = 4;
+            coloumns = 4;
         }
-        else
+        else if (noOfPieces == 25)
         {
-            if (noOfPieces == 2)
-            {
-                rows = 2;
-                coloumns = 1;
-            }
-            else if (noOfPieces == 3)
-            {
-                rows = 3;
-                coloumns = 1;
-            }
-            else if (noOfPieces == 4)
-            {
-                rows = 2;
-                coloumns = 2;
-            }
-            else if (noOfPieces == 6)
-            {
-                rows = 3;
-                coloumns = 2;
-            }
-            else if (noOfPieces == 9)
-            {
-                rows = 3;
-                coloumns = 3;
-            }
-            else if (noOfPieces == 12)
-            {
-                rows = 4;
-                coloumns = 3;
-            }
-            else if (noOfPieces == 15)
-            {
-                rows = 5;
-                coloumns = 3;
-            }
+            rows = 5;
+            coloumns = 5;
+        }
+        else if (noOfPieces == 36)
+        {
+            rows = 6;
+            coloumns = 6;
+        }
+        else if (noOfPieces == 64)
+        {
+            rows = 8;
+            coloumns = 8;
+        }
+        else if (noOfPieces == 100)
+        {
+            rows = 10;
+            coloumns = 10;
         }
 
         pieceWidth = textureWidth / coloumns;
@@ -162,7 +111,7 @@ public class TextureDivider : MonoBehaviour
                 n.transform.parent = spritesRoot.transform;
                 allSprites.Add(n);
                 n.transform.position = (Vector3)allPositions[positionNo];
-                if (true)
+                if (false)
                 {
                     float[] rotations = { 0, 90, 180, 270 };
                     n.transform.localEulerAngles = new Vector3(0, 0, rotations[Random.Range(0, 4)]);
@@ -201,7 +150,7 @@ public class TextureDivider : MonoBehaviour
     void FingerGestures_OnFingerTap(int fingerIndex, Vector2 fingerPos, int tapCount)
     {
         if (!tapEnabled) return;
-        if (true)
+        if (PlayerPrefs.GetInt("IsRotating") == 1)
         {
             GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
             if (touchedObj != null)
