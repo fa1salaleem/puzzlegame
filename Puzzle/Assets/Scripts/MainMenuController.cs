@@ -14,7 +14,8 @@ public class MainMenuController : MonoBehaviour
 	public string[] Name;
 	public GameObject CategoryName, SelectedRotation,SelectedDifficulty;
 	public Transform Pos1,Pos2;
-
+	public Slider PiecesSlider;
+	public Text PeicesText;
 	public GameObject libraryContentScroll;
 	public JsonFile myJsonFile;
 
@@ -60,7 +61,27 @@ public class MainMenuController : MonoBehaviour
 
 	void Update(){
 		print (PlayerPrefs.GetInt ("IsRotating", 0));
-			
+		if (PiecesSlider.value <= 0.2f) {
+			PeicesText.text = "16";
+			PeicesText.gameObject.transform.localScale = new Vector3 (0.2f,0.2f,1.0f);
+			PiecesNo = 16;
+		} else if (PiecesSlider.value > 0.2f && PiecesSlider.value <= 0.4f) {
+			PeicesText.text = "25";
+			PeicesText.gameObject.transform.localScale = new Vector3 (0.25f,0.25f,1.0f);
+			PiecesNo = 25;
+		} else if (PiecesSlider.value > 0.4f && PiecesSlider.value <= 0.6f) {
+			PeicesText.text = "36";
+			PeicesText.gameObject.transform.localScale = new Vector3 (0.3f,0.3f,1.0f);
+			PiecesNo = 36;
+		} else if (PiecesSlider.value > 0.6f && PiecesSlider.value <= 0.8f) {
+			PeicesText.text = "64";
+			PeicesText.gameObject.transform.localScale = new Vector3 (0.35f,0.35f,1.0f);
+			PiecesNo = 64;
+		} else {
+			PeicesText.text = "100";
+			PeicesText.gameObject.transform.localScale = new Vector3 (0.4f,0.4f,1.0f);
+			PiecesNo = 100;
+		}
 	}
 
     public void CollectionShopFunction(){
