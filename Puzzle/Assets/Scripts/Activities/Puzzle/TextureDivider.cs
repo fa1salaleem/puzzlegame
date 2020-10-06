@@ -63,7 +63,7 @@ public class TextureDivider : MonoBehaviour
         //starting X & Y space from left & above for first piece
         float startXPositionOffset = -2.0f;
         float startYPositionOffset = 6.0f;
-        float pixelToUnitRatio = 100.0f;
+        float pixelToUnitRatio = 80.0f;
 
         float spaceToCoverX = (SI_Helper.GetInstance.screenWidthInWorldPoints - startXPositionOffset);
         float textureSpaceX = textureWidth / pixelToUnitRatio;
@@ -188,15 +188,16 @@ public class TextureDivider : MonoBehaviour
         if (!touchEnabled) return;
         if (pickedObject != null)
         {
-            Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);              
-            if((position.y) > maxPositonY)
-            {
-                pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
-            }
-            else
-            {
-                pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            }
+            Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
+            pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
+            //if((position.y) > maxPositonY)
+            //{
+            //    pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
+            //}
+            //else
+            //{
+            //    pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
+            //}
         }
     }
 
@@ -206,14 +207,15 @@ public class TextureDivider : MonoBehaviour
         if (pickedObject != null)
         {
             Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
-            if ((position.y) > maxPositonY)
-            {
-                pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
-            }
-            else
-            {
-                pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            }
+            pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
+            //if ((position.y) > maxPositonY)
+            //{
+            //    pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
+            //}
+            //else
+            //{
+            //    pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
+            //}
         }
     }
 
