@@ -1,27 +1,45 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using DG.Tweening;
+
+[System.Serializable]
+public class PuzzlePosition
+{
+    public Vector3 position;
+    public  bool isOccupied;
+    public int myIndexInArray;
+
+    public PuzzlePosition(Vector3 _pos, int _index)
+    {
+        position = _pos;
+        myIndexInArray = _index;
+    }
+}
 
 public class TextureDivider : MonoBehaviour
 {
-    public GameObject spritesRoot;
-    public ArrayList allSprites = new ArrayList();
-
+    public GameObject spritesRoot, positionReference;
+    public PuzzlePiece[] allPuzzlePieces;
     public Vector3 originalPositionOfPickedObject;
     public GameObject pickedObject;
     public PuzzlePiece currentPuzzlePiece;
-
+    public List<PuzzlePosition> allPositions = new List<PuzzlePosition>();
     public Texture2D puzzleImageSource;
     public int currTopZ = 0;
     public int noOfPieces;
     float pieceWidth, pieceHeight;
     public Camera _camera;
+    public Image fullImage;
+    public int maxHintsAllowed = 3, hintsGiven = 0;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
     {
         noOfPieces = pieces;
         puzzleImageSource = source;
+
+        allPuzzlePieces = new PuzzlePiece[noOfPieces];
 
         int rows = 0;
         int coloumns = 0;
@@ -58,48 +76,31 @@ public class TextureDivider : MonoBehaviour
         pieceWidth = textureWidth / coloumns;
         pieceHeight = textureHeight / rows;
 
-        SI_Helper.GetInstance.CalculateScreenWidthHeight();
-
         //starting X & Y space from left & above for first piece
-        float startXPositionOffset = -2.0f;
-        float startYPositionOffset = 6.0f;
         float pixelToUnitRatio = 80.0f;
-
-        float spaceToCoverX = (SI_Helper.GetInstance.screenWidthInWorldPoints - startXPositionOffset);
-        float textureSpaceX = textureWidth / pixelToUnitRatio;
-        float leftOverX = Mathf.Abs(spaceToCoverX - textureSpaceX);
-        float xDiff = leftOverX / (coloumns - 1);
-
-        float spaceToCoverY = (SI_Helper.GetInstance.screenHeightInWorldPoints - startYPositionOffset);
-        float textureSpaceY = textureHeight / pixelToUnitRatio;
-        float leftOverY = Mathf.Abs(spaceToCoverY - textureSpaceY);
-        float yDiff = leftOverY / (rows - 1);
-
-        float startXPosition = (-SI_Helper.GetInstance.screenWidthInWorldPoints / 2) + startXPositionOffset;
-        float startYPosition = (SI_Helper.GetInstance.screenHeightInWorldPoints / 2) - startYPositionOffset;
-
+        float startXPosition = positionReference.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
+        float startYPosition = positionReference.gameObject.transform.position.y - (pieceHeight / (2 * pixelToUnitRatio));
         float startX = startXPosition;
         float startY = startYPosition;
 
-        ArrayList allPositions = new ArrayList();
+        int puzzlePosIndex = 0;
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < coloumns; j++)
             {
-                startX = startX + (pieceWidth / (2 * pixelToUnitRatio));
                 Vector3 position = new Vector3(startX, startY, 0);
-                allPositions.Add(position);
-                startX += xDiff;
+                PuzzlePosition puzzlePos = new PuzzlePosition(position, puzzlePosIndex);
+                allPositions.Add(puzzlePos);
+                startX += (pieceWidth / pixelToUnitRatio);
+                puzzlePosIndex++;
             }
             startX = startXPosition;
-            startY = startY - (pieceHeight / pixelToUnitRatio) - yDiff;
+            startY -= (pieceHeight / pixelToUnitRatio);
         }
-        allPositions.Shuffle();
-
-        int positionNo = 0;
 
         for (int i = 0; i < rows; i++)
         {
+            int index = noOfPieces - (coloumns * (i + 1));
             for (int j = 0; j < coloumns; j++)
             {
                 Sprite newSprite = Sprite.Create(source, new Rect(j * pieceWidth, i * pieceHeight, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
@@ -109,21 +110,33 @@ public class TextureDivider : MonoBehaviour
                 sr.sprite = newSprite;
                 sr.sortingOrder = 10;
                 n.transform.parent = spritesRoot.transform;
-                allSprites.Add(n);
-                n.transform.position = (Vector3)allPositions[positionNo];
-                if (false)
-                {
-                    float[] rotations = { 0, 90, 180, 270 };
-                    n.transform.localEulerAngles = new Vector3(0, 0, rotations[Random.Range(0, 4)]);
-                }
-                positionNo++;
-                n.name = ""+i+"_"+j;
+                //if (false)//for rotation
+                //{
+                //    float[] rotations = { 0, 90, 180, 270 };
+                //    n.transform.localEulerAngles = new Vector3(0, 0, rotations[Random.Range(0, 4)]);
+                //}
+                n.name = ""+index;
                 n.AddComponent<BoxCollider2D>().isTrigger = true;
                 PuzzlePiece puzzlePiece = n.AddComponent<PuzzlePiece>();
                 puzzlePiece.textureDivider = this;
                 n.AddComponent<Rigidbody2D>().gravityScale = 0;
+                allPuzzlePieces[index] = puzzlePiece;
+                index++;
             }
         }
+
+        int positionNo = 0;
+        foreach (PuzzlePiece puzzlePiece in allPuzzlePieces)
+        {
+            PuzzlePosition puzzlePosition = allPositions[positionNo] as PuzzlePosition;
+            puzzlePiece.gameObject.transform.position = /*puzzlePosition.position*/ new Vector3(startXPosition + Random.Range(0.0f,10.0f),
+                startYPosition - Random.Range(10.0f, 16.0f));
+            puzzlePiece.myPositionIndex = positionNo;
+            puzzlePiece.myPositionObject = puzzlePosition;
+            positionNo++;
+        }
+
+        fullImage.sprite = Sprite.Create(source, new Rect(0, 0, source.width, source.height), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
     }
 
     void OnEnable()
@@ -173,10 +186,14 @@ public class TextureDivider : MonoBehaviour
         GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
         if (touchedObj != null)
         {
-            originalPositionOfPickedObject = touchedObj.transform.position;
-            pickedObject = touchedObj;
-            currentPuzzlePiece = pickedObject.GetComponent<PuzzlePiece>();
-            currTopZ--;
+            PuzzlePiece pp = touchedObj.GetComponent<PuzzlePiece>();
+            if (pp != null & !pp.placed)
+            {
+                originalPositionOfPickedObject = touchedObj.transform.position;
+                pickedObject = touchedObj;
+                currentPuzzlePiece = pickedObject.GetComponent<PuzzlePiece>();
+                currTopZ--;
+            }
         }
     }
 
@@ -235,16 +252,16 @@ public class TextureDivider : MonoBehaviour
     public bool CheckPosition(Vector3 snapPosition)
     {
         bool occupied = false;
-        foreach(GameObject spriteLocal in allSprites)
-        {            
+        foreach (PuzzlePiece puzzlePiece in allPuzzlePieces)
+        {
             Vector2 snapPositionVector = new Vector2(snapPosition.x, snapPosition.y);
-            Vector2 spritePosition = new Vector2(spriteLocal.transform.position.x, spriteLocal.transform.position.y);
+            Vector2 spritePosition = new Vector2(puzzlePiece.gameObject.transform.position.x, puzzlePiece.gameObject.transform.position.y);
 
             string xSnapPos = snapPosition.x.ToString("0.0");
             string ySnapPos = snapPosition.y.ToString("0.0");
 
-            string xSpritePos = spriteLocal.transform.position.x.ToString("0.0");
-            string ySpritePos = spriteLocal.transform.position.y.ToString("0.0");
+            string xSpritePos = puzzlePiece.gameObject.transform.position.x.ToString("0.0");
+            string ySpritePos = puzzlePiece.gameObject.transform.position.y.ToString("0.0");
 
             if (xSnapPos == xSpritePos && ySnapPos == ySpritePos)
             {
@@ -264,6 +281,36 @@ public class TextureDivider : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public void ShowFullImage()
+    {
+        fullImage.gameObject.SetActive(!fullImage.gameObject.activeInHierarchy);
+    }
+
+    public void HideFullImage()
+    {
+        fullImage.gameObject.SetActive(false);
+    }
+
+    public void GiveHint()
+    {
+        if(hintsGiven < maxHintsAllowed)
+        {
+            PuzzlePiece pp = null;
+            do
+            {
+                int randomIndex = Random.Range(0, allPuzzlePieces.Length);
+                pp = allPuzzlePieces[randomIndex] as PuzzlePiece;
+            }
+            while (pp.placed);            
+            pp.MoveForHint();
+            hintsGiven++;
+        }
+        else
+        {
+            Debug.Log("hints limit reached");
         }
     }
 }

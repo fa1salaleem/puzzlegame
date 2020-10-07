@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PuzzlePiece : MonoBehaviour
 {
@@ -9,6 +10,16 @@ public class PuzzlePiece : MonoBehaviour
     public List<GameObject> allCollidedObjects = new List<GameObject>();
     public GameObject nearestColliderObject = null;
     public float distance = 100000.0f;
+    public int myPositionIndex;
+    public PuzzlePosition myPositionObject;
+    public bool placed;
+
+    public void MoveForHint()
+    {
+        gameObject.transform.DOMove(myPositionObject.position, 0.35f, false);
+        myPositionObject.isOccupied = true;
+        placed = true;
+    }
 
     void OnTriggerEnter2D(Collider2D other)
 	{

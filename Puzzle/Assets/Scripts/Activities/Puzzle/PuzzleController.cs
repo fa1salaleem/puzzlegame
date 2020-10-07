@@ -8,7 +8,7 @@ public class PuzzleController : MonoBehaviour
     public TextureDivider textureDivider;
     public Camera _camera;
     public int puzzlePieces;
-    public string puzzleImagePath;
+    public string puzzleImagePath;   
 
     public static PuzzleController MakePuzzle(int _pieces, string _puzzleImagePath)
     {

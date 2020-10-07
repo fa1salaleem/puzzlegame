@@ -5042,7 +5042,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &178189423
 RectTransform:
@@ -13956,7 +13956,7 @@ GameObject:
   - component: {fileID: 446749823}
   - component: {fileID: 446749822}
   m_Layer: 5
-  m_Name: '?'
+  m_Name: FullPic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52624,7 +52624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1807330900
 RectTransform:
   m_ObjectHideFlags: 0

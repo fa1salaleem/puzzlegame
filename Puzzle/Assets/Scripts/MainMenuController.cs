@@ -60,7 +60,7 @@ public class MainMenuController : MonoBehaviour
 	}
 
 	void Update(){
-		print (PlayerPrefs.GetInt ("IsRotating", 0));
+//		print (PlayerPrefs.GetInt ("IsRotating", 0));
 		if (PiecesSlider.value <= 0.2f) {
 			PeicesText.text = "16";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.2f,0.2f,1.0f);
