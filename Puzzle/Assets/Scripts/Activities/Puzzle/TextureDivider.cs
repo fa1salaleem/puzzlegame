@@ -20,7 +20,7 @@ public class PuzzlePosition
 
 public class TextureDivider : MonoBehaviour
 {
-    public GameObject spritesRoot, positionReference;
+    public GameObject spritesRoot, positionReference, positionReferenceActual;
     public PuzzlePiece[] allPuzzlePieces;
     public Vector3 originalPositionOfPickedObject;
     public GameObject pickedObject;
@@ -33,6 +33,7 @@ public class TextureDivider : MonoBehaviour
     public Camera _camera;
     public Image fullImage;
     public int maxHintsAllowed = 3, hintsGiven = 0;
+    public GameObject scrollContent;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
     {
@@ -129,12 +130,33 @@ public class TextureDivider : MonoBehaviour
         foreach (PuzzlePiece puzzlePiece in allPuzzlePieces)
         {
             PuzzlePosition puzzlePosition = allPositions[positionNo] as PuzzlePosition;
-            puzzlePiece.gameObject.transform.position = /*puzzlePosition.position*/ new Vector3(startXPosition + Random.Range(0.0f,10.0f),
-                startYPosition - Random.Range(10.0f, 16.0f));
+            //puzzlePiece.gameObject.transform.position = /*puzzlePosition.position*/ new Vector3(startXPosition + Random.Range(0.0f,10.0f),
+            //    startYPosition - Random.Range(10.0f, 16.0f));
             puzzlePiece.myPositionIndex = positionNo;
             puzzlePiece.myPositionObject = puzzlePosition;
             positionNo++;
         }
+
+        allPuzzlePieces.Shuffle();
+
+        float startXPositionActual = positionReferenceActual.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
+        float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
+        float startXActual = startXPositionActual;
+        float startYActual = startYPositionActual;
+        float XDiff = 0.5f;
+
+        for (int k = 0; k < allPuzzlePieces.Length; k++)
+        {
+            Vector3 position = new Vector3(startXActual, startYActual, 0);
+            PuzzlePiece puzzlePiece = allPuzzlePieces[k] as PuzzlePiece;
+            puzzlePiece.gameObject.transform.position = position;
+            startXActual += ((pieceWidth / pixelToUnitRatio) + XDiff);
+
+            RectTransform rect = scrollContent.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(rect.anchorMin.x + 0.275f, rect.anchorMin.y);
+        }
+
+        spritesRoot.gameObject.transform.SetParent(scrollContent.gameObject.transform);
 
         fullImage.sprite = Sprite.Create(source, new Rect(0, 0, source.width, source.height), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
     }
@@ -186,6 +208,8 @@ public class TextureDivider : MonoBehaviour
         GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
         if (touchedObj != null)
         {
+            scrollContent.GetComponentInParent<ScrollRect>().horizontal = false;
+
             PuzzlePiece pp = touchedObj.GetComponent<PuzzlePiece>();
             if (pp != null & !pp.placed)
             {
@@ -193,6 +217,8 @@ public class TextureDivider : MonoBehaviour
                 pickedObject = touchedObj;
                 currentPuzzlePiece = pickedObject.GetComponent<PuzzlePiece>();
                 currTopZ--;
+
+                pickedObject.gameObject.transform.SetParent(null);
             }
         }
     }
@@ -238,6 +264,8 @@ public class TextureDivider : MonoBehaviour
 
     void HandleOnFingerUp(int fingerIndex, Vector2 fingerPos, float timeHeldDown)
     {
+        scrollContent.GetComponentInParent<ScrollRect>().horizontal = true;
+
         if (!touchEnabled) return;
         if (pickedObject != null)
         {
