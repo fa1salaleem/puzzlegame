@@ -22,6 +22,7 @@ public class TextureDivider : MonoBehaviour
 {
     public GameObject spritesRoot, positionReference, positionReferenceActual;
     public PuzzlePiece[] allPuzzlePieces;
+    public Vector3[] allPuzzlePiecesPositionsInScroll;
     public Vector3 originalPositionOfPickedObject;
     public GameObject pickedObject;
     public PuzzlePiece currentPuzzlePiece;
@@ -34,13 +35,17 @@ public class TextureDivider : MonoBehaviour
     public Image fullImage;
     public int maxHintsAllowed = 3, hintsGiven = 0;
     public GameObject scrollContent;
+    public float scrollOutY = -4.2f;
+    public PuzzleController puzzleController;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
-    {
+    {        
         noOfPieces = pieces;
         puzzleImageSource = source;
+        maxHintsAllowed = noOfPieces;
 
         allPuzzlePieces = new PuzzlePiece[noOfPieces];
+        allPuzzlePiecesPositionsInScroll = new Vector3[noOfPieces];
 
         int rows = 0;
         int coloumns = 0;
@@ -77,13 +82,13 @@ public class TextureDivider : MonoBehaviour
         pieceWidth = textureWidth / coloumns;
         pieceHeight = textureHeight / rows;
 
-        //starting X & Y space from left & above for first piece
+        //computing actual grid positions of puzzle pieces outside scroll
         float pixelToUnitRatio = 80.0f;
         float startXPosition = positionReference.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
         float startYPosition = positionReference.gameObject.transform.position.y - (pieceHeight / (2 * pixelToUnitRatio));
         float startX = startXPosition;
         float startY = startYPosition;
-
+       
         int puzzlePosIndex = 0;
         for (int i = 0; i < rows; i++)
         {
@@ -99,6 +104,7 @@ public class TextureDivider : MonoBehaviour
             startY -= (pieceHeight / pixelToUnitRatio);
         }
 
+        //making puzzle pieces
         for (int i = 0; i < rows; i++)
         {
             int index = noOfPieces - (coloumns * (i + 1));
@@ -126,19 +132,20 @@ public class TextureDivider : MonoBehaviour
             }
         }
 
+        //assigning actual grid positions to puzzle pieces
         int positionNo = 0;
         foreach (PuzzlePiece puzzlePiece in allPuzzlePieces)
         {
             PuzzlePosition puzzlePosition = allPositions[positionNo] as PuzzlePosition;
-            //puzzlePiece.gameObject.transform.position = /*puzzlePosition.position*/ new Vector3(startXPosition + Random.Range(0.0f,10.0f),
-            //    startYPosition - Random.Range(10.0f, 16.0f));
             puzzlePiece.myPositionIndex = positionNo;
             puzzlePiece.myPositionObject = puzzlePosition;
             positionNo++;
         }
 
+        //shuffling pieces
         allPuzzlePieces.Shuffle();
 
+        //calculating in scroll view positions
         float startXPositionActual = positionReferenceActual.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
         float startXActual = startXPositionActual;
@@ -154,10 +161,11 @@ public class TextureDivider : MonoBehaviour
             puzzlePiece.scrollScale = scaleToBe;
             puzzlePiece.inScroll = true;
             puzzlePiece.SetLocalScale(scaleToBe);
-            puzzlePiece.gameObject.transform.position = position;          
+            puzzlePiece.gameObject.transform.position = position;
+            allPuzzlePiecesPositionsInScroll[k] = position;
             startXActual += ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff);
             RectTransform rect = scrollContent.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(rect.anchorMin.x + 0.275f, rect.anchorMin.y);
+            rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);
         }
 
         spritesRoot.gameObject.transform.SetParent(scrollContent.gameObject.transform);
@@ -192,7 +200,7 @@ public class TextureDivider : MonoBehaviour
         if (PlayerPrefs.GetInt("IsRotating") == 1)
         {
             GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
-            if (touchedObj != null)
+            if (touchedObj != null && touchedObj.name != "PositionReferenceActual")
             {
                 tapEnabled = false;
                 touchedObj.transform.DOLocalRotate(new Vector3(0.0f, 0.0f, touchedObj.transform.localEulerAngles.z + 90.0f), 0.25f);
@@ -210,7 +218,7 @@ public class TextureDivider : MonoBehaviour
     {
         if (!touchEnabled) return;
         GameObject touchedObj = SI_Helper.GetInstance.PickObject(fingerPos, _camera);
-        if (touchedObj != null)
+        if (touchedObj != null && touchedObj.name != "PositionReferenceActual")
         {
             scrollContent.GetComponentInParent<ScrollRect>().horizontal = false;
 
@@ -221,8 +229,6 @@ public class TextureDivider : MonoBehaviour
                 pickedObject = touchedObj;
                 currentPuzzlePiece = pickedObject.GetComponent<PuzzlePiece>();
                 currTopZ--;
-
-                pickedObject.gameObject.transform.SetParent(null);
             }
         }
     }
@@ -230,6 +236,7 @@ public class TextureDivider : MonoBehaviour
     void HandleOnFingerMoveBegin(int fingerIndex, Vector2 fingerPos)
     {
         if (!touchEnabled) return;
+
         if (pickedObject != null)
         {
             Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
@@ -240,10 +247,33 @@ public class TextureDivider : MonoBehaviour
     void HandleOnFingerMove(int fingerIndex, Vector2 fingerPos)
     {
         if (!touchEnabled) return;
+
         if (pickedObject != null)
         {
             Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
             pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
+
+            //In & Out of scroll based on position
+            if (pickedObject.transform.position.y > scrollOutY)
+            {
+                PuzzlePiece pp = pickedObject.GetComponent<PuzzlePiece>();
+                if(pp.inScroll)
+                {
+                    pp.SetLocalScale(1.0f);
+                    pp.inScroll = false;
+                    pickedObject.gameObject.transform.SetParent(puzzleController.gameObject.transform);
+                }
+            }
+            else if(pickedObject.transform.position.y <= scrollOutY)
+            {
+                PuzzlePiece pp = pickedObject.GetComponent<PuzzlePiece>();
+                if(!pp.inScroll)
+                {
+                    pp.SetLocalScale(pp.scrollScale);
+                    pp.inScroll = true;
+                    pickedObject.gameObject.transform.SetParent(this.gameObject.transform);
+                }
+            }
         }
     }
 

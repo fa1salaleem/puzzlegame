@@ -465,6 +465,7 @@ MonoBehaviour:
   positionReference: {fileID: 2138364988}
   positionReferenceActual: {fileID: 3971086823502251589}
   allPuzzlePieces: []
+  allPuzzlePiecesPositionsInScroll: []
   originalPositionOfPickedObject: {x: 0, y: 0, z: 0}
   pickedObject: {fileID: 0}
   currentPuzzlePiece: {fileID: 0}
@@ -477,6 +478,8 @@ MonoBehaviour:
   maxHintsAllowed: 5
   hintsGiven: 0
   scrollContent: {fileID: 826836387}
+  scrollOutY: -4.2
+  puzzleController: {fileID: 1197373930}
   tapEnabled: 1
   touchEnabled: 1
 --- !u!1 &419004985
@@ -1495,8 +1498,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3971086823502251589}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.2, y: -7.53, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6, y: -7.53, z: 200}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2807038195513928829}
@@ -1540,7 +1543,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: c93775b3d98e2d84389f6c1bab62ec87, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

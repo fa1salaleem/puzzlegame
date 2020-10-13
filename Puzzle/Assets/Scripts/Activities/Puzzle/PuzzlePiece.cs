@@ -26,10 +26,24 @@ public class PuzzlePiece : MonoBehaviour
         myPositionObject.isOccupied = true;
         placed = true;
         inScroll = false;
+        gameObject.transform.SetParent(textureDivider.puzzleController.transform);
+        SetLocalScale(1.0f);
     }
 
     void OnTriggerEnter2D(Collider2D other)
 	{
+        PuzzlePiece pp = other.gameObject.GetComponent<PuzzlePiece>();
+
+        if(pp == null)
+        {
+            return;
+        }
+
+        if (pp.inScroll)
+        {
+            return;
+        }
+
         if (textureDivider.pickedObject != null && textureDivider.pickedObject.name == gameObject.name)
         {
             nearestColliderObject = null;
@@ -43,7 +57,19 @@ public class PuzzlePiece : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if(allCollidedObjects.Contains(other.gameObject))
+        PuzzlePiece pp = other.gameObject.GetComponent<PuzzlePiece>();
+
+        if (pp == null)
+        {
+            return;
+        }
+
+        if (pp.inScroll)
+        {
+            return;
+        }
+
+        if (allCollidedObjects.Contains(other.gameObject))
             allCollidedObjects.Remove(other.gameObject);
     }
 
