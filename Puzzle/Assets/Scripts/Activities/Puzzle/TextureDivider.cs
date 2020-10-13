@@ -143,15 +143,19 @@ public class TextureDivider : MonoBehaviour
         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
         float startXActual = startXPositionActual;
         float startYActual = startYPositionActual;
-        float XDiff = 0.5f;
+        float XDiff = 0.75f;
+        float fixedPieceWidthInScroll = 200.0f;
+        float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
 
         for (int k = 0; k < allPuzzlePieces.Length; k++)
         {
             Vector3 position = new Vector3(startXActual, startYActual, 0);
             PuzzlePiece puzzlePiece = allPuzzlePieces[k] as PuzzlePiece;
-            puzzlePiece.gameObject.transform.position = position;
-            startXActual += ((pieceWidth / pixelToUnitRatio) + XDiff);
-
+            puzzlePiece.scrollScale = scaleToBe;
+            puzzlePiece.inScroll = true;
+            puzzlePiece.SetLocalScale(scaleToBe);
+            puzzlePiece.gameObject.transform.position = position;          
+            startXActual += ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff);
             RectTransform rect = scrollContent.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(rect.anchorMin.x + 0.275f, rect.anchorMin.y);
         }
@@ -223,9 +227,6 @@ public class TextureDivider : MonoBehaviour
         }
     }
 
-    //for test temorary solution
-    float maxPositonY = 8.5f;
-
     void HandleOnFingerMoveBegin(int fingerIndex, Vector2 fingerPos)
     {
         if (!touchEnabled) return;
@@ -233,14 +234,6 @@ public class TextureDivider : MonoBehaviour
         {
             Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
             pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            //if((position.y) > maxPositonY)
-            //{
-            //    pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
-            //}
-            //else
-            //{
-            //    pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            //}
         }
     }
 
@@ -251,14 +244,6 @@ public class TextureDivider : MonoBehaviour
         {
             Vector3 position = SI_Helper.GetInstance.GetWorldPositionForCamera(fingerPos, _camera);
             pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            //if ((position.y) > maxPositonY)
-            //{
-            //    pickedObject.transform.position = new Vector3(position.x, maxPositonY, currTopZ);
-            //}
-            //else
-            //{
-            //    pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
-            //}
         }
     }
 

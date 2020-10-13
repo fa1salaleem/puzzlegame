@@ -9,16 +9,23 @@ public class PuzzlePiece : MonoBehaviour
     public GameObject pickedObjectHandle;
     public List<GameObject> allCollidedObjects = new List<GameObject>();
     public GameObject nearestColliderObject = null;
-    public float distance = 100000.0f;
+    public float distance = 100000.0f, scrollScale;
     public int myPositionIndex;
     public PuzzlePosition myPositionObject;
     public bool placed;
+    public bool inScroll = true;
+
+    public void SetLocalScale(float scale)
+    {
+        gameObject.transform.localScale = new Vector3(scale, scale, scale);
+    }
 
     public void MoveForHint()
     {
         gameObject.transform.DOMove(myPositionObject.position, 0.35f, false);
         myPositionObject.isOccupied = true;
         placed = true;
+        inScroll = false;
     }
 
     void OnTriggerEnter2D(Collider2D other)
