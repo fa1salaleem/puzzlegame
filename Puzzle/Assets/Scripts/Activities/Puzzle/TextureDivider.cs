@@ -378,7 +378,7 @@ public class TextureDivider : MonoBehaviour
             while (pp.placeOnActualGrid);
 
             if(pp.inScroll)
-            {
+            {//for reordering if hint is chosen from scroll
                 if (pp.myPositionObjectInScroll != null)
                 {
                     pp.myPositionObjectInScroll.position = pp.gameObject.transform.position;
@@ -423,11 +423,13 @@ public class TextureDivider : MonoBehaviour
                         puzzlePositionInScroll2.position = puzzlePositionInScroll2.myPuzzlePiece.gameObject.transform.position;
                         puzzlePositionInScroll1.myPuzzlePiece = puzzlePositionInScroll2.myPuzzlePiece;
                         puzzlePositionInScroll1.myPuzzlePiece.myPositionObjectInScroll = puzzlePositionInScroll1;
-                        puzzlePositionInScroll1.myPuzzlePiece.gameObject.transform.DOMove(puzzlePositionInScroll1.position, 0.5f, false);
+                        puzzlePositionInScroll1.myPuzzlePiece.gameObject.transform.DOMove(puzzlePositionInScroll1.position, 0.35f, false);
                     }
                 }
                 totalPiecesLeftInScroll--;
                 pp.myPositionObjectInScroll = null;
+                RectTransform rect = scrollContent.GetComponent<RectTransform>();
+                rect.anchorMax = new Vector2(rect.anchorMax.x - 0.26f, rect.anchorMax.y);
             }
         }
     }
