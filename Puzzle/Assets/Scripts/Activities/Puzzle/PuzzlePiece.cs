@@ -10,10 +10,11 @@ public class PuzzlePiece : MonoBehaviour
     public List<GameObject> allCollidedObjects = new List<GameObject>();
     public GameObject nearestColliderObject = null;
     public float distance = 100000.0f, scrollScale;
-    public int myPositionIndex;
     public PuzzlePosition myPositionObject;
-    public bool placed;
+    public PuzzlePositionInScroll myPositionObjectInScroll;
+    public bool placeOnActualGrid = false;
     public bool inScroll = true;
+    public bool outOfScrollOnce = false;
 
     public void SetLocalScale(float scale)
     {
@@ -24,8 +25,9 @@ public class PuzzlePiece : MonoBehaviour
     {
         gameObject.transform.DOMove(myPositionObject.position, 0.35f, false);
         myPositionObject.isOccupied = true;
-        placed = true;
+        placeOnActualGrid = true;       
         inScroll = false;
+        outOfScrollOnce = true;
         gameObject.transform.SetParent(textureDivider.puzzleController.transform);
         SetLocalScale(1.0f);
     }

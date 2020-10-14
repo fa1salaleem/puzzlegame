@@ -18,11 +18,25 @@ public class PuzzlePosition
     }
 }
 
+public class PuzzlePositionInScroll
+{
+    public Vector3 position;
+    public int myIndexInArray;
+    public PuzzlePiece myPuzzlePiece;
+
+    public PuzzlePositionInScroll(Vector3 _pos, int _index, PuzzlePiece _puzzlePiece)
+    {
+        position = _pos;
+        myIndexInArray = _index;
+        myPuzzlePiece = _puzzlePiece;
+    }
+}
+
 public class TextureDivider : MonoBehaviour
 {
     public GameObject spritesRoot, positionReference, positionReferenceActual;
     public PuzzlePiece[] allPuzzlePieces;
-    public Vector3[] allPuzzlePiecesPositionsInScroll;
+    public PuzzlePositionInScroll[] allPuzzlePiecesPositionsInScroll; 
     public Vector3 originalPositionOfPickedObject;
     public GameObject pickedObject;
     public PuzzlePiece currentPuzzlePiece;
@@ -37,6 +51,7 @@ public class TextureDivider : MonoBehaviour
     public GameObject scrollContent;
     public float scrollOutY = -4.2f;
     public PuzzleController puzzleController;
+    public int totalPiecesLeftInScroll;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
     {        
@@ -45,7 +60,7 @@ public class TextureDivider : MonoBehaviour
         maxHintsAllowed = noOfPieces;
 
         allPuzzlePieces = new PuzzlePiece[noOfPieces];
-        allPuzzlePiecesPositionsInScroll = new Vector3[noOfPieces];
+        allPuzzlePiecesPositionsInScroll = new PuzzlePositionInScroll[noOfPieces];
 
         int rows = 0;
         int coloumns = 0;
@@ -137,7 +152,6 @@ public class TextureDivider : MonoBehaviour
         foreach (PuzzlePiece puzzlePiece in allPuzzlePieces)
         {
             PuzzlePosition puzzlePosition = allPositions[positionNo] as PuzzlePosition;
-            puzzlePiece.myPositionIndex = positionNo;
             puzzlePiece.myPositionObject = puzzlePosition;
             positionNo++;
         }
@@ -162,14 +176,14 @@ public class TextureDivider : MonoBehaviour
             puzzlePiece.inScroll = true;
             puzzlePiece.SetLocalScale(scaleToBe);
             puzzlePiece.gameObject.transform.position = position;
-            allPuzzlePiecesPositionsInScroll[k] = position;
+            puzzlePiece.myPositionObjectInScroll = allPuzzlePiecesPositionsInScroll[k] = new PuzzlePositionInScroll(position,k,puzzlePiece);
             startXActual += ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff);
             RectTransform rect = scrollContent.GetComponent<RectTransform>();
             rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);
         }
 
         spritesRoot.gameObject.transform.SetParent(scrollContent.gameObject.transform);
-
+        totalPiecesLeftInScroll = noOfPieces;
         fullImage.sprite = Sprite.Create(source, new Rect(0, 0, source.width, source.height), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
     }
 
@@ -223,11 +237,15 @@ public class TextureDivider : MonoBehaviour
             scrollContent.GetComponentInParent<ScrollRect>().horizontal = false;
 
             PuzzlePiece pp = touchedObj.GetComponent<PuzzlePiece>();
-            if (pp != null & !pp.placed)
+            if (pp != null & !pp.placeOnActualGrid)
             {
                 originalPositionOfPickedObject = touchedObj.transform.position;
                 pickedObject = touchedObj;
                 currentPuzzlePiece = pickedObject.GetComponent<PuzzlePiece>();
+                if (currentPuzzlePiece.myPositionObjectInScroll != null)
+                {
+                    currentPuzzlePiece.myPositionObjectInScroll.position = originalPositionOfPickedObject;
+                }
                 currTopZ--;
             }
         }
@@ -254,24 +272,17 @@ public class TextureDivider : MonoBehaviour
             pickedObject.transform.position = new Vector3(position.x, position.y, currTopZ);
 
             //In & Out of scroll based on position
-            if (pickedObject.transform.position.y > scrollOutY)
+            if (pickedObject.transform.position.y > scrollOutY)//out
             {
-                PuzzlePiece pp = pickedObject.GetComponent<PuzzlePiece>();
-                if(pp.inScroll)
-                {
-                    pp.SetLocalScale(1.0f);
-                    pp.inScroll = false;
-                    pickedObject.gameObject.transform.SetParent(puzzleController.gameObject.transform);
-                }
+                MovePuzzlePieceOutOfScroll(pickedObject);           
             }
-            else if(pickedObject.transform.position.y <= scrollOutY)
+            else if(pickedObject.transform.position.y <= scrollOutY)//in
             {
                 PuzzlePiece pp = pickedObject.GetComponent<PuzzlePiece>();
                 if(!pp.inScroll)
                 {
                     pp.SetLocalScale(pp.scrollScale);
                     pp.inScroll = true;
-                    pickedObject.gameObject.transform.SetParent(this.gameObject.transform);
                 }
             }
         }
@@ -286,6 +297,23 @@ public class TextureDivider : MonoBehaviour
         {
             pickedObject.transform.position = new Vector3(pickedObject.transform.position.x, pickedObject.transform.position.y, currTopZ);
             currentPuzzlePiece.TouchLifted();
+
+            if (currentPuzzlePiece.inScroll)
+            {
+                //inserting in scroll on base of if it has left scroll already
+                if (currentPuzzlePiece.outOfScrollOnce)
+                {
+                    //increment this when add the piece in scroll again
+                    //totalPiecesLeftInScroll++;
+                    //set this when add piece in scroll again
+                    //currentPuzzlePiece.outOfScrollOnce = false;
+                }//inserting in scroll on base of if it has not left scroll
+                else
+                {
+                    pickedObject.gameObject.transform.position = currentPuzzlePiece.myPositionObjectInScroll.position;
+                    pickedObject.gameObject.transform.SetParent(this.gameObject.transform);
+                }
+            }
         }
 
         pickedObject = null;
@@ -347,13 +375,60 @@ public class TextureDivider : MonoBehaviour
                 int randomIndex = Random.Range(0, allPuzzlePieces.Length);
                 pp = allPuzzlePieces[randomIndex] as PuzzlePiece;
             }
-            while (pp.placed);            
+            while (pp.placeOnActualGrid);
+
+            if(pp.inScroll)
+            {
+                if (pp.myPositionObjectInScroll != null)
+                {
+                    pp.myPositionObjectInScroll.position = pp.gameObject.transform.position;
+                }
+                MovePuzzlePieceOutOfScroll(pp.gameObject);
+            }
+
             pp.MoveForHint();
             hintsGiven++;
         }
         else
         {
             Debug.Log("hints limit reached");
+        }
+    }
+
+    public void MovePuzzlePieceOutOfScroll(GameObject _pickedObject)
+    {
+        PuzzlePiece pp = _pickedObject.GetComponent<PuzzlePiece>();
+        if (pp.inScroll)
+        {
+            pp.SetLocalScale(1.0f);
+            pp.inScroll = false;
+            if (!pp.outOfScrollOnce)
+            {
+                pp.outOfScrollOnce = true;
+                _pickedObject.gameObject.transform.SetParent(puzzleController.gameObject.transform);
+
+                for (int i = pp.myPositionObjectInScroll.myIndexInArray; i < allPuzzlePiecesPositionsInScroll.Length; i++)
+                {
+                    if (i == (totalPiecesLeftInScroll - 1))
+                    {
+                        //last valid piece in scroll
+                        PuzzlePositionInScroll puzzlePositionInScroll1 = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i];
+                        puzzlePositionInScroll1.myPuzzlePiece = null;
+                        break;
+                    }
+                    else
+                    {
+                        PuzzlePositionInScroll puzzlePositionInScroll1 = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i];
+                        PuzzlePositionInScroll puzzlePositionInScroll2 = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i + 1];
+                        puzzlePositionInScroll2.position = puzzlePositionInScroll2.myPuzzlePiece.gameObject.transform.position;
+                        puzzlePositionInScroll1.myPuzzlePiece = puzzlePositionInScroll2.myPuzzlePiece;
+                        puzzlePositionInScroll1.myPuzzlePiece.myPositionObjectInScroll = puzzlePositionInScroll1;
+                        puzzlePositionInScroll1.myPuzzlePiece.gameObject.transform.DOMove(puzzlePositionInScroll1.position, 0.5f, false);
+                    }
+                }
+                totalPiecesLeftInScroll--;
+                pp.myPositionObjectInScroll = null;
+            }
         }
     }
 }
