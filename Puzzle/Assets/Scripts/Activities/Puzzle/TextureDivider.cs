@@ -303,10 +303,65 @@ public class TextureDivider : MonoBehaviour
                 //inserting in scroll on base of if it has left scroll already
                 if (currentPuzzlePiece.outOfScrollOnce)
                 {
-                    //increment this when add the piece in scroll again
-                    //totalPiecesLeftInScroll++;
-                    //set this when add piece in scroll again
-                    //currentPuzzlePiece.outOfScrollOnce = false;
+                    float minDis = 100000.0f;
+                    PuzzlePiece nearestPuzzlePiece = null;
+                    foreach (PuzzlePositionInScroll pp in allPuzzlePiecesPositionsInScroll)
+                    {
+                        if (pp.myPuzzlePiece != null)
+                        {
+                            if (pp.myPuzzlePiece.inScroll && !pp.myPuzzlePiece.outOfScrollOnce)
+                            {
+                                float distance = Vector2.Distance(new Vector2(currentPuzzlePiece.gameObject.transform.position.x, currentPuzzlePiece.gameObject.transform.position.y),
+                                    new Vector2(pp.myPuzzlePiece.gameObject.transform.position.x, pp.myPuzzlePiece.gameObject.transform.position.y));
+                                if (distance < minDis && (currentPuzzlePiece.transform.position.x < pp.myPuzzlePiece.transform.position.x))
+                                {
+                                    minDis = distance;
+                                    nearestPuzzlePiece = pp.myPuzzlePiece;
+                                }
+                            }
+                        }
+                    }
+
+                    if (nearestPuzzlePiece != null)
+                    {
+                        nearestPuzzlePiece.gameObject.transform.localEulerAngles = new Vector3(0, 0, 90);
+                    }
+                    else
+                    {
+                        PuzzlePiece lastNotNullPuzzlePiece = null;
+                        int indexOfFirstNullPuzzlePiece = 0;
+                        foreach (PuzzlePositionInScroll pzp in allPuzzlePiecesPositionsInScroll)
+                        {
+                            if (pzp.myPuzzlePiece != null)
+                            {
+                                lastNotNullPuzzlePiece = pzp.myPuzzlePiece;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            indexOfFirstNullPuzzlePiece++;
+                        }
+
+                        PuzzlePositionInScroll pzpInScroll = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[indexOfFirstNullPuzzlePiece];
+                        pzpInScroll.myPuzzlePiece = currentPuzzlePiece;
+                        pzpInScroll.myPuzzlePiece.myPositionObjectInScroll = pzpInScroll;
+                        pickedObject.gameObject.transform.SetParent(this.gameObject.transform);
+                        totalPiecesLeftInScroll++;
+                        currentPuzzlePiece.outOfScrollOnce = false;
+                        RectTransform rect = scrollContent.GetComponent<RectTransform>();
+                        rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);
+
+                        float pixelToUnitRatio = 80.0f;
+                        float XDiff = 0.75f;
+                        float fixedPieceWidthInScroll = 200.0f;
+                        float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+                        float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
+                        Vector3 pos = new Vector3(lastNotNullPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
+                            startYPositionActual, 0);
+                        currentPuzzlePiece.gameObject.transform.DOMove(pos, 0.35f, false);
+                    }
+
                 }//inserting in scroll on base of if it has not left scroll
                 else
                 {
