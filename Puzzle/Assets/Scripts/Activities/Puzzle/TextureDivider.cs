@@ -374,7 +374,6 @@ public class TextureDivider : MonoBehaviour
                     }
                     else
                     {
-                        //fix a big when there is no one puzzle piece left in scroller and we try to inser one
                         PuzzlePiece lastNotNullPuzzlePiece = null;
                         int indexOfFirstNullPuzzlePiece = 0;
                         foreach (PuzzlePositionInScroll pzp in allPuzzlePiecesPositionsInScroll)
@@ -403,9 +402,18 @@ public class TextureDivider : MonoBehaviour
                         float XDiff = 0.75f;
                         float fixedPieceWidthInScroll = 200.0f;
                         float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+                        float startXPositionActual = positionReferenceActual.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
                         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
-                        Vector3 pos = new Vector3(lastNotNullPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
+                        Vector3 pos = Vector3.zero;
+                        if (lastNotNullPuzzlePiece != null)
+                        {
+                            pos = new Vector3(lastNotNullPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
                             startYPositionActual, 0);
+                        }
+                        else
+                        {
+                            pos = new Vector3(startXPositionActual,startYPositionActual, 0);
+                        }                        
                         currentPuzzlePiece.gameObject.transform.DOMove(pos, 0.35f, false);
                         pzpInScroll.myPuzzlePiece.myPositionObjectInScroll.position = pos;
                     }
