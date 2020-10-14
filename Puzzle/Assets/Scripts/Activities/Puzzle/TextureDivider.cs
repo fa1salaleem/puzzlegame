@@ -324,10 +324,57 @@ public class TextureDivider : MonoBehaviour
 
                     if (nearestPuzzlePiece != null)
                     {
-                        nearestPuzzlePiece.gameObject.transform.localEulerAngles = new Vector3(0, 0, 90);
+                        PuzzlePiece lastNotNullPuzzlePiece = null;
+                        int indexOfFirstNullPuzzlePiece = 0;
+                        foreach (PuzzlePositionInScroll pzp in allPuzzlePiecesPositionsInScroll)
+                        {
+                            if (pzp.myPuzzlePiece != null)
+                            {
+                                lastNotNullPuzzlePiece = pzp.myPuzzlePiece;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            indexOfFirstNullPuzzlePiece++;
+                        }
+
+                        int finalIndex = nearestPuzzlePiece.myPositionObjectInScroll.myIndexInArray;
+                        for (int i = indexOfFirstNullPuzzlePiece; i > finalIndex; i--)
+                        {
+                            PuzzlePositionInScroll pzpInScrollfront = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i];
+                            PuzzlePositionInScroll pzpInScrollback = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i-1];
+                            pzpInScrollfront.myPuzzlePiece = pzpInScrollback.myPuzzlePiece;
+                            pzpInScrollfront.myPuzzlePiece.myPositionObjectInScroll = pzpInScrollfront;
+                            float pixelToUnitRatio = 80.0f;
+                            float XDiff = 0.75f;
+                            float fixedPieceWidthInScroll = 200.0f;
+                            float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+                            float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
+                            Vector3 pos = new Vector3(pzpInScrollfront.myPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
+                                startYPositionActual, 0);
+                            pzpInScrollfront.myPuzzlePiece.gameObject.transform.DOMove(pos, 0.35f, false);
+                            pzpInScrollfront.position = pos;
+
+                            if(i == (finalIndex + 1))//lastobject
+                            {
+                                pzpInScrollback.myPuzzlePiece = currentPuzzlePiece;
+                                pzpInScrollback.myPuzzlePiece.myPositionObjectInScroll = pzpInScrollback;
+                                pickedObject.gameObject.transform.SetParent(this.gameObject.transform);
+                                totalPiecesLeftInScroll++;
+                                currentPuzzlePiece.outOfScrollOnce = false;
+                                RectTransform rect = scrollContent.GetComponent<RectTransform>();
+                                rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);               
+                                Vector3 position = new Vector3(pos.x - ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
+                                    startYPositionActual, 0);
+                                currentPuzzlePiece.gameObject.transform.DOMove(position, 0.35f, false);
+                                pzpInScrollback.myPuzzlePiece.myPositionObjectInScroll.position = position;
+                            }
+                        }
                     }
                     else
                     {
+                        //fix a big when there is no one puzzle piece left in scroller and we try to inser one
                         PuzzlePiece lastNotNullPuzzlePiece = null;
                         int indexOfFirstNullPuzzlePiece = 0;
                         foreach (PuzzlePositionInScroll pzp in allPuzzlePiecesPositionsInScroll)
@@ -360,6 +407,7 @@ public class TextureDivider : MonoBehaviour
                         Vector3 pos = new Vector3(lastNotNullPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
                             startYPositionActual, 0);
                         currentPuzzlePiece.gameObject.transform.DOMove(pos, 0.35f, false);
+                        pzpInScroll.myPuzzlePiece.myPositionObjectInScroll.position = pos;
                     }
 
                 }//inserting in scroll on base of if it has not left scroll
@@ -420,34 +468,45 @@ public class TextureDivider : MonoBehaviour
         fullImage.gameObject.SetActive(false);
     }
 
+    public bool hintTouchAllowed = true;
     public void GiveHint()
     {
-        if(hintsGiven < maxHintsAllowed)
+        if (hintTouchAllowed)
         {
-            PuzzlePiece pp = null;
-            do
+            hintTouchAllowed = false;
+            if (hintsGiven < maxHintsAllowed)
             {
-                int randomIndex = Random.Range(0, allPuzzlePieces.Length);
-                pp = allPuzzlePieces[randomIndex] as PuzzlePiece;
-            }
-            while (pp.placeOnActualGrid);
-
-            if(pp.inScroll)
-            {//for reordering if hint is chosen from scroll
-                if (pp.myPositionObjectInScroll != null)
+                PuzzlePiece pp = null;
+                do
                 {
-                    pp.myPositionObjectInScroll.position = pp.gameObject.transform.position;
+                    int randomIndex = Random.Range(0, allPuzzlePieces.Length);
+                    pp = allPuzzlePieces[randomIndex] as PuzzlePiece;
                 }
-                MovePuzzlePieceOutOfScroll(pp.gameObject);
-            }
+                while (pp.placeOnActualGrid);
 
-            pp.MoveForHint();
-            hintsGiven++;
+                if (pp.inScroll)
+                {//for reordering if hint is chosen from scroll
+                    if (pp.myPositionObjectInScroll != null)
+                    {
+                        pp.myPositionObjectInScroll.position = pp.gameObject.transform.position;
+                    }
+                    MovePuzzlePieceOutOfScroll(pp.gameObject);
+                }
+
+                pp.MoveForHint();
+                hintsGiven++;
+            }
+            else
+            {
+                Debug.Log("hints limit reached");
+            }
+            Invoke("AllowHintTouch", 0.4f);
         }
-        else
-        {
-            Debug.Log("hints limit reached");
-        }
+    }
+
+    public void AllowHintTouch()
+    {
+        hintTouchAllowed = true;
     }
 
     public void MovePuzzlePieceOutOfScroll(GameObject _pickedObject)
