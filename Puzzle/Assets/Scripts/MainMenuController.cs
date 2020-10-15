@@ -25,6 +25,7 @@ public class MainMenuController : MonoBehaviour
 	public float Geihftl;
 
 	public static int PiecesNo;
+	public GameObject Slider, Handle, Background;
 
 	private void Start()
 	{
@@ -65,22 +66,42 @@ public class MainMenuController : MonoBehaviour
 			PeicesText.text = "16";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.2f,0.2f,1.0f);
 			PiecesNo = 16;
+			Slider.transform.GetComponent<Image>().color = new Color32(255,255,0,255);
+			Handle.transform.GetComponent<Image>().color = new Color32(255,255,0,255);
+			Background.transform.GetComponent<Image>().color = new Color32(255,255,0,255);
+			PeicesText.gameObject.transform.GetComponent<Text>().color = new Color32(255,255,0,255);
 		} else if (PiecesSlider.value > 0.2f && PiecesSlider.value <= 0.4f) {
 			PeicesText.text = "25";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.25f,0.25f,1.0f);
 			PiecesNo = 25;
+			Slider.transform.GetComponent<Image>().color = new Color32(0,255,0,255);
+			Handle.transform.GetComponent<Image>().color = new Color32(0,255,0,255);
+			Background.transform.GetComponent<Image>().color = new Color32(0,255,0,255);
+			PeicesText.gameObject.transform.GetComponent<Text>().color = new Color32(0,255,0,255);
 		} else if (PiecesSlider.value > 0.4f && PiecesSlider.value <= 0.6f) {
 			PeicesText.text = "36";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.3f,0.3f,1.0f);
 			PiecesNo = 36;
+			Slider.transform.GetComponent<Image>().color = new Color32(0,255,255,255);
+			Handle.transform.GetComponent<Image>().color = new Color32(0,255,255,255);
+			Background.transform.GetComponent<Image>().color = new Color32(0,255,255,255);
+			PeicesText.gameObject.transform.GetComponent<Text>().color = new Color32(0,255,255,255);
 		} else if (PiecesSlider.value > 0.6f && PiecesSlider.value <= 0.8f) {
 			PeicesText.text = "64";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.35f,0.35f,1.0f);
 			PiecesNo = 64;
+			Slider.transform.GetComponent<Image>().color = new Color32(255,175,0,255);
+			Handle.transform.GetComponent<Image>().color = new Color32(255,175,0,255);
+			Background.transform.GetComponent<Image>().color = new Color32(255,175,0,255);
+			PeicesText.gameObject.transform.GetComponent<Text>().color = new Color32(255,175,0,255);
 		} else {
 			PeicesText.text = "100";
 			PeicesText.gameObject.transform.localScale = new Vector3 (0.4f,0.4f,1.0f);
 			PiecesNo = 100;
+			Slider.transform.GetComponent<Image>().color = new Color32(255,0,0,255);
+			Handle.transform.GetComponent<Image>().color = new Color32(255,0,0,255);
+			Background.transform.GetComponent<Image>().color = new Color32(255,0,0,255);
+			PeicesText.gameObject.transform.GetComponent<Text>().color = new Color32(255,0,0,255);
 		}
 	}
 
