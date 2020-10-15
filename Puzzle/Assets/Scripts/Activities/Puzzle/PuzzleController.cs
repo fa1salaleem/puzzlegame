@@ -12,7 +12,7 @@ public class PuzzleController : MonoBehaviour
 
     public static PuzzleController MakePuzzle(int _pieces, string _puzzleImagePath)
     {
-        GameObject gameObject = Instantiate(Resources.Load("Prefabs/Puzzle 1")) as GameObject;
+        GameObject gameObject = Instantiate(Resources.Load("Prefabs/PuzzleV1")) as GameObject;
         PuzzleController puzzle = gameObject.GetComponent<PuzzleController>();
         puzzle.puzzlePieces = _pieces;
         puzzle.puzzleImagePath = _puzzleImagePath;

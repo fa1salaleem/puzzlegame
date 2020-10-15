@@ -49,7 +49,7 @@ public class TextureDivider : MonoBehaviour
     public Image fullImage;
     public int maxHintsAllowed = 3, hintsGiven = 0;
     public GameObject scrollContent;
-    public float scrollOutY = -4.2f;
+    public float scrollOutY = -5.1f;
     public PuzzleController puzzleController;
     public int totalPiecesLeftInScroll;
 
