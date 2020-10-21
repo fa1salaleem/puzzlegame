@@ -34,7 +34,7 @@ public class PuzzlePositionInScroll
 
 public class TextureDivider : MonoBehaviour
 {
-    public GameObject spritesRoot, positionReference, positionReferenceActual;
+    public GameObject spritesRoot, positionReference, positionReferenceActual, puzzleBg;
     public PuzzlePiece[] allPuzzlePieces;
     public PuzzlePositionInScroll[] allPuzzlePiecesPositionsInScroll; 
     public Vector3 originalPositionOfPickedObject;
@@ -52,6 +52,10 @@ public class TextureDivider : MonoBehaviour
     public float scrollOutY = -5.1f;
     public PuzzleController puzzleController;
     public int totalPiecesLeftInScroll;
+    public float pixelToUnitRatio = 80.0f;
+    public float XDiff = 1.75f;
+    public float fixedPieceWidthInScroll = 175.0f;
+    public float rectXIncrement = 0.3f;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
     {        
@@ -98,7 +102,6 @@ public class TextureDivider : MonoBehaviour
         pieceHeight = textureHeight / rows;
 
         //computing actual grid positions of puzzle pieces outside scroll
-        float pixelToUnitRatio = 80.0f;
         float startXPosition = positionReference.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
         float startYPosition = positionReference.gameObject.transform.position.y - (pieceHeight / (2 * pixelToUnitRatio));
         float startX = startXPosition;
@@ -131,7 +134,7 @@ public class TextureDivider : MonoBehaviour
                 SpriteRenderer sr = n.AddComponent<SpriteRenderer>();
                 sr.sprite = newSprite;
                 sr.sortingOrder = 10;
-                n.transform.parent = spritesRoot.transform;
+                n.transform.parent = spritesRoot.transform;                
                 //if (false)//for rotation
                 //{
                 //    float[] rotations = { 0, 90, 180, 270 };
@@ -143,6 +146,8 @@ public class TextureDivider : MonoBehaviour
                 puzzlePiece.textureDivider = this;
                 n.AddComponent<Rigidbody2D>().gravityScale = 0;
                 allPuzzlePieces[index] = puzzlePiece;
+
+                //incrementing index
                 index++;
             }
         }
@@ -153,7 +158,17 @@ public class TextureDivider : MonoBehaviour
         {
             PuzzlePosition puzzlePosition = allPositions[positionNo] as PuzzlePosition;
             puzzlePiece.myPositionObject = puzzlePosition;
-            positionNo++;
+
+            puzzlePiece.gameObject.transform.position = puzzlePosition.position;
+            puzzlePiece.GetComponent<SpriteRenderer>().enabled = false;
+            Sprite spForMask = Sprite.Create(source, new Rect(0, 0, source.width, source.height), new Vector2(0.5f, 0.5f), pixelToUnitRatio);
+            MaskedRender mR = MaskedRender.CreateMask(spForMask, "MaskSprites/" + noOfPieces + "/" + positionNo);
+            mR.gameObject.transform.SetParent(puzzlePiece.gameObject.transform);
+            mR.spriteRenderer.sortingOrder = positionNo + 11;
+            mR.maskSprite.isCustomRangeActive = true;
+            mR.maskSprite.frontSortingOrder = positionNo + 11;
+
+            positionNo++;            
         }
 
         //shuffling pieces
@@ -164,8 +179,6 @@ public class TextureDivider : MonoBehaviour
         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
         float startXActual = startXPositionActual;
         float startYActual = startYPositionActual;
-        float XDiff = 0.75f;
-        float fixedPieceWidthInScroll = 200.0f;
         float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
 
         for (int k = 0; k < allPuzzlePieces.Length; k++)
@@ -179,7 +192,7 @@ public class TextureDivider : MonoBehaviour
             puzzlePiece.myPositionObjectInScroll = allPuzzlePiecesPositionsInScroll[k] = new PuzzlePositionInScroll(position,k,puzzlePiece);
             startXActual += ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff);
             RectTransform rect = scrollContent.GetComponent<RectTransform>();
-            rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);
+            rect.anchorMax = new Vector2(rect.anchorMax.x + rectXIncrement, rect.anchorMax.y);
         }
 
         spritesRoot.gameObject.transform.SetParent(scrollContent.gameObject.transform);
@@ -346,9 +359,6 @@ public class TextureDivider : MonoBehaviour
                             PuzzlePositionInScroll pzpInScrollback = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i-1];
                             pzpInScrollfront.myPuzzlePiece = pzpInScrollback.myPuzzlePiece;
                             pzpInScrollfront.myPuzzlePiece.myPositionObjectInScroll = pzpInScrollfront;
-                            float pixelToUnitRatio = 80.0f;
-                            float XDiff = 0.75f;
-                            float fixedPieceWidthInScroll = 200.0f;
                             float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
                             float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
                             Vector3 pos = new Vector3(pzpInScrollfront.myPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
@@ -364,7 +374,7 @@ public class TextureDivider : MonoBehaviour
                                 totalPiecesLeftInScroll++;
                                 currentPuzzlePiece.outOfScrollOnce = false;
                                 RectTransform rect = scrollContent.GetComponent<RectTransform>();
-                                rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);               
+                                rect.anchorMax = new Vector2(rect.anchorMax.x + rectXIncrement, rect.anchorMax.y);               
                                 Vector3 position = new Vector3(pos.x - ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
                                     startYPositionActual, 0);
                                 currentPuzzlePiece.gameObject.transform.DOMove(position, 0.35f, false);
@@ -396,11 +406,8 @@ public class TextureDivider : MonoBehaviour
                         totalPiecesLeftInScroll++;
                         currentPuzzlePiece.outOfScrollOnce = false;
                         RectTransform rect = scrollContent.GetComponent<RectTransform>();
-                        rect.anchorMax = new Vector2(rect.anchorMax.x + 0.26f, rect.anchorMax.y);
+                        rect.anchorMax = new Vector2(rect.anchorMax.x + rectXIncrement, rect.anchorMax.y);
 
-                        float pixelToUnitRatio = 80.0f;
-                        float XDiff = 0.75f;
-                        float fixedPieceWidthInScroll = 200.0f;
                         float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
                         float startXPositionActual = positionReferenceActual.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
                         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
@@ -551,7 +558,7 @@ public class TextureDivider : MonoBehaviour
                 totalPiecesLeftInScroll--;
                 pp.myPositionObjectInScroll = null;
                 RectTransform rect = scrollContent.GetComponent<RectTransform>();
-                rect.anchorMax = new Vector2(rect.anchorMax.x - 0.26f, rect.anchorMax.y);
+                rect.anchorMax = new Vector2(rect.anchorMax.x - rectXIncrement, rect.anchorMax.y);
             }
         }
     }

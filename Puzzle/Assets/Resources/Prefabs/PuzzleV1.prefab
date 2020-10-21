@@ -183,7 +183,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 60
   orthographic: 1
   orthographic size: 13
@@ -464,6 +464,7 @@ MonoBehaviour:
   spritesRoot: {fileID: 399418125}
   positionReference: {fileID: 2138364988}
   positionReferenceActual: {fileID: 3971086823502251589}
+  puzzleBg: {fileID: 1140939406}
   allPuzzlePieces: []
   originalPositionOfPickedObject: {x: 0, y: 0, z: 0}
   pickedObject: {fileID: 0}
