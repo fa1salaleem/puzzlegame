@@ -54,7 +54,7 @@ public class TextureDivider : MonoBehaviour
     public int totalPiecesLeftInScroll;
     public float pixelToUnitRatio = 80.0f;
     public float XDiff = 1.75f;
-    public float fixedPieceWidthInScroll = 175.0f;
+    public float fixedPieceHeightInScroll = 140.0f;
     public float rectXIncrement = 0.3f;
 
     public void DivideTexture(Texture2D source,int pieces, float scale)
@@ -179,7 +179,7 @@ public class TextureDivider : MonoBehaviour
         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
         float startXActual = startXPositionActual;
         float startYActual = startYPositionActual;
-        float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+        float scaleToBe = fixedPieceHeightInScroll / pieceHeight;
 
         for (int k = 0; k < allPuzzlePieces.Length; k++)
         {
@@ -359,7 +359,7 @@ public class TextureDivider : MonoBehaviour
                             PuzzlePositionInScroll pzpInScrollback = (PuzzlePositionInScroll)allPuzzlePiecesPositionsInScroll[i-1];
                             pzpInScrollfront.myPuzzlePiece = pzpInScrollback.myPuzzlePiece;
                             pzpInScrollfront.myPuzzlePiece.myPositionObjectInScroll = pzpInScrollfront;
-                            float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+                            float scaleToBe = fixedPieceHeightInScroll / pieceHeight;
                             float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
                             Vector3 pos = new Vector3(pzpInScrollfront.myPuzzlePiece.transform.position.x + ((pieceWidth * scaleToBe / pixelToUnitRatio) + XDiff),
                                 startYPositionActual, 0);
@@ -408,7 +408,7 @@ public class TextureDivider : MonoBehaviour
                         RectTransform rect = scrollContent.GetComponent<RectTransform>();
                         rect.anchorMax = new Vector2(rect.anchorMax.x + rectXIncrement, rect.anchorMax.y);
 
-                        float scaleToBe = fixedPieceWidthInScroll / pieceWidth;
+                        float scaleToBe = fixedPieceHeightInScroll / pieceHeight;
                         float startXPositionActual = positionReferenceActual.gameObject.transform.position.x + (pieceWidth / (2 * pixelToUnitRatio));
                         float startYPositionActual = positionReferenceActual.gameObject.transform.position.y;
                         Vector3 pos = Vector3.zero;

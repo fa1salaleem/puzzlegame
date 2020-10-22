@@ -33,8 +33,8 @@ RectTransform:
   m_Father: {fileID: 204014370}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.05050922, y: 0.40809894}
-  m_AnchorMax: {x: 0.9543055, y: 0.8009635}
+  m_AnchorMin: {x: 0.05282401, y: 0.3408854}
+  m_AnchorMax: {x: 0.94555545, y: 0.84130204}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -66,7 +66,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -481,6 +481,10 @@ MonoBehaviour:
   scrollOutY: -5.1
   puzzleController: {fileID: 1197373930}
   totalPiecesLeftInScroll: 0
+  pixelToUnitRatio: 80
+  XDiff: 1.75
+  fixedPieceWidthInScroll: 175
+  rectXIncrement: 0.3
   tapEnabled: 1
   touchEnabled: 1
   hintTouchAllowed: 1
@@ -976,7 +980,7 @@ RectTransform:
   m_Father: {fileID: 446941055}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.1550297}
+  m_AnchorMin: {x: 0, y: 0.1456547}
   m_AnchorMax: {x: 1, y: 0.26860133}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
@@ -1160,8 +1164,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140939406}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.7, z: 0}
-  m_LocalScale: {x: 2.94, y: 2.21, z: 1}
+  m_LocalPosition: {x: 0, y: 2.45, z: 0}
+  m_LocalScale: {x: 2.94, y: 2.94, z: 1}
   m_Children: []
   m_Father: {fileID: 2807038195513928829}
   m_RootOrder: 1
@@ -1240,7 +1244,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138364988}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.39, y: 7.49, z: 0}
+  m_LocalPosition: {x: -6.39, y: 8.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2807038195513928829}
@@ -1575,7 +1579,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3971086823502251589}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.01, y: -7.49, z: 200}
+  m_LocalPosition: {x: -6.01, y: -7.61, z: 200}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2807038195513928829}
